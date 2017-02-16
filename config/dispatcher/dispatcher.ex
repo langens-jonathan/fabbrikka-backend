@@ -23,11 +23,11 @@ defmodule Dispatcher do
   # end
 
   match "/products/*path" do
-      Proxy.forward conn, path, "http://datadomain.fabbrikka.com/products/"
+      Proxy.forward conn, path, "http://resource/products/"
   end
 
   match "/product-images/*path" do
-      Proxy.forward conn, path, "http://datadomain.fabbrikka.com/product-images/"
+      Proxy.forward conn, path, "http://resource/product-images/"
   end
 
   match _ do
