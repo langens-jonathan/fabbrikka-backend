@@ -65,3 +65,29 @@
 ;;   :on-path "themes")
 
 ;;
+
+;; first KISS attempt
+
+(define-resource product ()
+  :class (s-prefix "ext:Product")
+  :properties `((:name :string ,(s-prefix "ext:name"))
+  	            (:unit-price :short-float ,(s-prefix "ext:unitPrice"))
+  	            (:description :string ,(s-prefix "ext:description"))
+  	            (:type :string ,(s-prefix "ext:type")))
+  :has-many `((product-image :via ,(s-prefix "ext:product-image")
+                       :as "product-images"))
+  :resource-base (s-url "http://datadomain.fabbrikka.com/products/")
+  :on-path "products")
+
+(define-resource product-image ()
+  :class (s-prefix "ext:ProductImage")
+  :properties `((:access-url :url ,(s-prefix "ext:accessURL"))
+                (:type :string ,(s-prefix "ext:type")))
+  :has-one `((product :via ,(s-prefix "ext:productImage")
+                      :inverse t
+                      :as "product"))
+  :resource-base (s-url "http://datadomain.fabbrikka.com/product-images/")
+  :on-path "product-images")
+
+
+
