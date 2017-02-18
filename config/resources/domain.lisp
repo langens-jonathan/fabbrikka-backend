@@ -65,3 +65,69 @@
 ;;   :on-path "themes")
 
 ;;
+
+(define-resource product ()
+  :class (s-prefix "ext:Product")
+  :properties `((:type :string ,(s-prefix "ext:type")))
+  :has-many `((product-name-locale :via ,(s-prefix "ext:hasProductNameLocale")
+                     :as "product-name-locales")
+              (product-description-locale :via ,(s-prefix "ext:hasProductDescriptionLocale")
+                     :as "product-description-locale")
+              (product-size :via ,(s-prefix "ext:hasProductSize")
+                     :as "product-size")
+              (product-image :via ,(s-prefix "ext:hasProductImage")
+                       :as "product-images"))
+  :has-one `((product-price :via ,(s-prefix "ext:hasProductSize")
+  	                :inverse t
+                    :as "product-price"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/products/")
+  :on-path "products")
+
+(define-resource product-name-locale ()
+  :class (s-prefix "ext:ProductNameLocale")
+  :properties `((:name :string ,(s-prefix "ext:name"))
+  	            (:locale :string ,(s-prefix "ext:locale")))
+  :has-one `((product :via ,(s-prefix "ext:hasProductNameLocale")
+  	                :inverse t
+                    :as "product"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/product-name-locales/")
+  :on-path "product-name-locales")
+
+(define-resource product-description-locale ()
+  :class (s-prefix "ext:ProductDescriptionLocale")
+  :properties `((:description :string ,(s-prefix "ext:description"))
+  	            (:locale :string ,(s-prefix "ext:locale")))
+  :has-one `((product :via ,(s-prefix "ext:hasProductDescriptionLocale")
+  	                :inverse t
+                    :as "product"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/product-description-locales/")
+  :on-path "product-description-locales")
+
+(define-resource product-size ()
+  :class (s-prefix "ext:ProductSize")
+  :properties `((:size-name :string ,(s-prefix "ext:sizeName")))
+  :has-one `((product :via ,(s-prefix "ext:hasProductSize")
+  	                :inverse t
+                    :as "product"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/product-sizes/")
+  :on-path "product-sizes")
+
+(define-resource product-price ()
+  :class (s-prefix "ext:ProductPrice")
+  :properties `((:amount :float ,(s-prefix "ext:amount"))
+  				(:currency :string, (s-prefix "ext:currency")))
+  :has-one `((product :via ,(s-prefix "ext:hasProductPrice")
+  	                :inverse t
+                    :as "product"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/product-prices/")
+  :on-path "product-prices")
+
+(define-resource product-image ()
+  :class (s-prefix "ext:ProductImage")
+  :properties `((:access-url :url ,(s-prefix "ext:accessURL"))
+                (:type :string ,(s-prefix "ext:type")))
+  :has-one `((product :via ,(s-prefix "ext:hasProductImage")
+                      :inverse t
+                      :as "product"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/product-images/")
+  :on-path "product-images")

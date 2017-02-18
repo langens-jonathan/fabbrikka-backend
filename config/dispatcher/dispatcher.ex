@@ -18,9 +18,29 @@ defmodule Dispatcher do
   # docker-compose stop; docker-compose rm; docker-compose up
   # after altering this file.
   #
-  # match "/themes/*path" do
-  #   Proxy.forward conn, path, "http://resource/themes/"
-  # end
+  match "/products/*path" do
+    Proxy.forward conn, path, "http://resource/products/"
+  end
+
+  match "/product-name-locales/*path" do
+    Proxy.forward conn, path, "http://resource/product-name-locales/"
+  end
+
+  match "/product-description-locales/*path" do
+    Proxy.forward conn, path, "http://resource/product-description-locales/"
+  end
+
+  match "/product-sizes/*path" do
+    Proxy.forward conn, path, "http://resource/product-sizes/"
+  end
+
+  match "/product-prices/*path" do
+    Proxy.forward conn, path, "http://resource/product-prices/"
+  end
+
+  match "/product-images/*path" do
+    Proxy.forward conn, path, "http://resource/product-images/"
+  end
 
   match _ do
     send_resp( conn, 404, "Route not found.  See config/dispatcher.ex" )
