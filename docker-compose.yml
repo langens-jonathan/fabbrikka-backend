@@ -22,8 +22,18 @@ services:
     volumes:
       - ./data/db:/data
   resource:
-    image: semtech/mu-cl-resources:1.12.1
+    image: semtech/mu-cl-resources:latest
     links:
       - db:database
     volumes:
       - ./config/resources:/config
+  file-service:
+    image: semtech/mu-file-service
+    links:
+      - db:database 
+    volumes:
+      - ./data/files:/data
+    ports:
+      - "6969:80"
+    environment:
+      - SECRET_KEY_BASE=test

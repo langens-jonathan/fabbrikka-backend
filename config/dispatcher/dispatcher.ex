@@ -22,12 +22,12 @@ defmodule Dispatcher do
     Proxy.forward conn, path, "http://resource/products/"
   end
 
-  match "/product-name-locales/*path" do
-    Proxy.forward conn, path, "http://resource/product-name-locales/"
+  match "/product-names/*path" do
+    Proxy.forward conn, path, "http://resource/product-names/"
   end
 
-  match "/product-description-locales/*path" do
-    Proxy.forward conn, path, "http://resource/product-description-locales/"
+  match "/product-descriptions/*path" do
+    Proxy.forward conn, path, "http://resource/product-descriptions/"
   end
 
   match "/product-sizes/*path" do
@@ -41,6 +41,15 @@ defmodule Dispatcher do
   match "/product-images/*path" do
     Proxy.forward conn, path, "http://resource/product-images/"
   end
+
+  match "/files/*path" do
+    Proxy.forward conn, path, "http://file-service/files/"
+  end
+
+  match "/product-audiences/*path" do
+    Proxy.forward conn, path, "http://resource/product-audiences/"
+  end
+
 
   match _ do
     send_resp( conn, 404, "Route not found.  See config/dispatcher.ex" )
