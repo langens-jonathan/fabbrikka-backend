@@ -50,6 +50,13 @@ defmodule Dispatcher do
     Proxy.forward conn, path, "http://resource/product-audiences/"
   end
 
+  match "/shopping-carts/*path" do
+    Proxy.forward conn, path, "http://resource/shopping-carts/"
+  end
+
+  match "/shopping-cart-items/*path" do
+    Proxy.forward conn, path, "http://resource/shopping-cart-items/"
+  end
 
   match _ do
     send_resp( conn, 404, "Route not found.  See config/dispatcher.ex" )

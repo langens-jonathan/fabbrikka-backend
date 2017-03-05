@@ -26,45 +26,26 @@
 ;;   :on-path "<url-path-on-which-this-resource-is-available>")
 
 
-;; An example setup with a catalog, dataset, themes would be:
-;;
-;; (define-resource catalog ()
-;;   :class (s-prefix "dcat:Catalog")
-;;   :properties `((:title :string ,(s-prefix "dct:title")))
-;;   :has-many `((dataset :via ,(s-prefix "dcat:dataset")
-;;                        :as "datasets"))
-;;   :resource-base (s-url "http://webcat.tmp.semte.ch/catalogs/")
-;;   :on-path "catalogs")
+(define-resource shopping-cart ()
+  :class (s-prefix "ext:ShoppingCart")
+  :properties `((:owner-session :string ,(s-prefix "ext:owner-session")))
+  :has-many `((shopping-cart-item :via ,(s-prefix "ext:hasShoppingCartItem")
+                    :as "shopping-cart-items"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/shopping-carts/")
+  :on-path "shopping-carts")
 
-;; (define-resource dataset ()
-;;   :class (s-prefix "dcat:Dataset")
-;;   :properties `((:title :string ,(s-prefix "dct:title"))
-;;                 (:description :string ,(s-prefix "dct:description")))
-;;   :has-one `((catalog :via ,(s-prefix "dcat:dataset")
-;;                       :inverse t
-;;                       :as "catalog"))
-;;   :has-many `((theme :via ,(s-prefix "dcat:theme")
-;;                      :as "themes"))
-;;   :resource-base (s-url "http://webcat.tmp.tenforce.com/datasets/")
-;;   :on-path "datasets")
-
-;; (define-resource distribution ()
-;;   :class (s-prefix "dcat:Distribution")
-;;   :properties `((:title :string ,(s-prefix "dct:title"))
-;;                 (:access-url :url ,(s-prefix "dcat:accessURL")))
-;;   :resource-base (s-url "http://webcat.tmp.tenforce.com/distributions/")
-;;   :on-path "distributions")
-
-;; (define-resource theme ()
-;;   :class (s-prefix "tfdcat:Theme")
-;;   :properties `((:pref-label :string ,(s-prefix "skos:prefLabel")))
-;;   :has-many `((dataset :via ,(s-prefix "dcat:theme")
-;;                        :inverse t
-;;                        :as "datasets"))
-;;   :resource-base (s-url "http://webcat.tmp.tenforce.com/themes/")
-;;   :on-path "themes")
-
-;;
+(define-resource shopping-cart-item ()
+  :class (s-prefix "ext:ShoppingCartItem")
+  :properties `((:quantity :number ,(s-prefix "ext:quantity")))
+  :has-one `((product :via ,(s-prefix "ext:hasProduct")
+                      :as "product")
+             (shopping-cart :via ,(s-prefix "ext:hasShoppingCartItem")
+                       :inverse t
+                       :as "shopping-cart")
+             (product-size :via ,(s-prefix "ext:hasSize")
+                       :as "size"))
+  :resource-base (s-url "http://business-domain.fabbrikka.com/shopping-cart-items/")
+  :on-path "shopping-cart-items")
 
 (define-resource product-name ()
   :class (s-prefix "ext:ProductName")
@@ -89,15 +70,15 @@
 (define-resource product-size ()
   :class (s-prefix "ext:ProductSize")
   :properties `((:size-name :string ,(s-prefix "ext:sizeName")))
-  :has-one `((product :via ,(s-prefix "ext:hasProductSize")
+  :has-many `((product :via ,(s-prefix "ext:hasProductSize")
   	                :inverse t
-                    :as "product"))
+                    :as "products"))
   :resource-base (s-url "http://business-domain.fabbrikka.com/product-sizes/")
   :on-path "product-sizes")
 
 (define-resource product-price ()
   :class (s-prefix "ext:ProductPrice")
-  :properties `((:amount :float ,(s-prefix "ext:amount"))
+  :properties `((:amount :number ,(s-prefix "ext:amount"))
   				(:currency :string, (s-prefix "ext:currency")))
   :has-one `((product :via ,(s-prefix "ext:hasProductPrice")
   	                :inverse t
@@ -120,6 +101,9 @@
   :properties `((:name :string ,(s-prefix "ext:name"))
                 (:description :string ,(s-prefix "ext:description"))
                 (:label :string ,(s-prefix "ext:label")))
+  :has-many `((product :via ,(s-prefix "ext:hasProductAudience")
+                    :inverse t
+                    :as "products"))
   :resource-base (s-url "http://business-domain.fabbrikka.com/product-audiences/")
   :on-path "product-audiences")
 
@@ -137,7 +121,7 @@
                        :as "product-images")
               (product-audience :via ,(s-prefix "ext:hasProductAudience")
                     :as "product-audiences"))
-  :has-one `((product-price :via ,(s-prefix "ext:hasProductSize")
+  :has-one `((product-price :via ,(s-prefix "ext:hasProductPrice")
                     :as "product-price"))
   :resource-base (s-url "http://business-domain.fabbrikka.com/products/")
   :on-path "products")
